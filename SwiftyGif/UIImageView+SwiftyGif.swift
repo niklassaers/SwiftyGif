@@ -325,11 +325,20 @@ public extension UIImageView {
             return false
         }
         
+#if os(xrOS)
+        return true // Better than the guesswork below
+        /*
+        let keyWindow = UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+        let scene = keyWindow?.windowScene
+        let screenRect = keyWindow?.bounds ?? CGRect(x: 0, y: 0, width: 200, height: 100) // TODO: Is that right?
+         */
+#else
         let screenRect = UIScreen.main.bounds
         let viewRect = imageView.convert(bounds, to:nil)
         let intersectionRect = viewRect.intersection(screenRect)
         
         return window != nil && !intersectionRect.isEmpty && !intersectionRect.isNull
+#endif
     }
     
     func clear() {
